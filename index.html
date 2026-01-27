@@ -1,86 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>English Vocabulary Quiz</title>
+    <style>
+        /* CSS Gradient Pastel */
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .quiz-card { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; position: relative; }
+        .hide { display: none !important; }
+        input { width: 80%; padding: 12px; margin: 20px 0; border: 2px solid #ffdac1; border-radius: 10px; }
+        button { background: linear-gradient(to right, #ffb7b2, #ffdac1); border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; color: #5d4037; transition: 0.3s; }
+        button:hover { transform: scale(1.05); }
+        .option-btn { display: block; width: 100%; background: #fff; margin: 10px 0; padding: 15px; border: 1px solid #eee; border-radius: 12px; text-align: left; cursor: pointer; font-size: 1rem; }
+        .option-btn:hover { background: #fff5f5; border-color: #ffb7b2; }
+        .progress-bar-bg { background: #eee; height: 8px; border-radius: 4px; margin: 15px 0; }
+        #progress-bar-fill { background: #b2e2f2; height: 100%; width: 0%; transition: 0.3s; }
+        .status-correct { color: #27ae60; font-weight: bold; }
+        .status-wrong { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
 <div id="quiz-wrapper">
     <div id="start-screen" class="quiz-card">
-        <h1 style="color: #a1887f;">✨ English Vocabulary Quiz ✨</h1>
-        <p>Vui lòng nhập tên để bắt đầu ôn tập 30 từ vựng.</p>
-        <input type="text" id="student-name" placeholder="Tên của bạn..." />
+        <h2>✨ Vocabulary Quiz ✨</h2>
+        <input type="text" id="student-name" placeholder="Nhập tên của bạn...">
         <br>
-        <button onclick="startQuiz()">Bắt đầu</button>
+        <button onclick="startQuiz()">Bắt đầu bài thi</button>
     </div>
 
     <div id="quiz-container" class="quiz-card hide">
-        <div class="quiz-header">
-            <div id="display-name" style="font-weight: bold;"></div>
-            <div class="progress-bar-bg"><div id="progress-bar-fill"></div></div>
-            <div id="timer-display">⏱️ <span id="time-left">20</span>s</div>
-        </div>
-        <div id="question-box">
-            <h2 id="question-text" style="font-size: 1.1rem; min-height: 50px; color: #5d4037;"></h2>
-            <div id="options-container"></div>
-        </div>
+        <div id="display-name" style="font-weight: bold; color: #a1887f;"></div>
+        <div class="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+        <div style="color: #ff6b6b; font-weight: bold; margin-bottom: 10px;">⏱️ <span id="time-left">20</span>s</div>
+        <h2 id="question-text" style="font-size: 1.1rem; color: #5d4037;"></h2>
+        <div id="options-container"></div>
     </div>
 
     <div id="result-screen" class="quiz-card hide">
-        <h2 style="color: #a1887f;">Kết quả bài thi</h2>
+        <h2>Kết quả</h2>
         <div id="ranking-box" style="font-size: 3rem;"></div>
         <div id="final-stats"></div>
-        <div id="review-container" style="text-align: left; max-height: 400px; overflow-y: auto; margin-top: 20px; border-top: 1px solid #eee;"></div>
+        <div id="review-container" style="text-align: left; max-height: 300px; overflow-y: auto; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;"></div>
         <button onclick="location.reload()" style="margin-top: 20px;">Làm lại</button>
     </div>
 </div>
 
-<style>
-#quiz-wrapper { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); padding: 20px; border-radius: 15px; display: flex; justify-content: center; }
-.quiz-card { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
-.hide { display: none !important; }
-#student-name { width: 80%; padding: 10px; margin: 15px 0; border: 2px solid #ffdac1; border-radius: 8px; }
-button { background: linear-gradient(to right, #ffb7b2, #ffdac1); border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; color: #5d4037; }
-.option-btn { display: block; width: 100%; background: #fff; margin: 8px 0; padding: 12px; border: 1px solid #eee; border-radius: 10px; text-align: left; cursor: pointer; transition: 0.2s; }
-.option-btn:hover { background: #fff5f5; border-color: #ffb7b2; }
-.progress-bar-bg { background: #eee; height: 8px; border-radius: 4px; margin: 10px 0; }
-#progress-bar-fill { background: #b2e2f2; height: 100%; width: 0%; transition: 0.3s; }
-.status-correct { color: #27ae60; font-weight: bold; }
-.status-wrong { color: #e74c3c; font-weight: bold; }
-</style>
-
 <script>
+// Tạo âm thanh bằng Web Audio API để không bị lỗi link
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playBeep(freq, type) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = type; // 'sine', 'square', 'sawtooth', 'triangle'
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.5);
+}
+
 const quizData = [
     { q: "She has the ________ to sing beautifully.", a: ["ability", "ban", "pilot", "right"], c: 0 },
-    { q: "Because of his injury, he was ________ to walk.", a: ["able", "unable", "gentle", "physical"], c: 1 },
-    { q: "The government decided to ________ smoking in public.", a: ["earn", "face", "ban", "promote"], c: 2 },
-    { q: "In the past, many girls were ________ to get married early.", a: ["forced", "gentle", "official", "equal"], c: 0 },
-    { q: "________, have you seen my keys?", a: ["By the way", "Official", "Individual", "Deal with"], c: 0 },
-    { q: "Yuri Gagarin was a famous ________.", a: ["firefighter", "cosmonaut", "surgeon", "secretary"], c: 1 },
-    { q: "We need to ________ this problem immediately.", a: ["deal with", "earn", "focus", "ban"], c: 0 },
-    { q: "________ is a serious crime in many countries.", a: ["Fitness", "Domestic violence", "Teamwork", "Knowledge"], c: 1 },
+    { q: "He was ________ to walk because of his leg.", a: ["able", "unable", "gentle", "equal"], c: 1 },
+    { q: "The government decided to ________ smoking.", a: ["earn", "face", "ban", "focus"], c: 2 },
+    { q: "In the past, many girls were ________ to get married.", a: ["forced", "gentle", "official", "equal"], c: 0 },
+    { q: "He is a famous ________ who traveled to space.", a: ["firefighter", "cosmonaut", "surgeon", "secretary"], c: 1 },
+    { q: "We need to ________ this problem now.", a: ["deal with", "earn", "focus", "ban"], c: 0 },
+    { q: "________ is a serious crime in families.", a: ["Fitness", "Domestic violence", "Teamwork", "Knowledge"], c: 1 },
     { q: "She works hard to ________ a high salary.", a: ["face", "earn", "promote", "treat"], c: 1 },
-    { q: "Men and women should receive ________ pay.", a: ["equal", "low-paying", "mental", "physical"], c: 0 },
-    { q: "________ means having the same rights.", a: ["Equality", "Violence", "Pressure", "Ability"], c: 0 },
-    { q: "Looking at screens too much can hurt your ________.", a: ["fitness", "eyesight", "strength", "knowledge"], c: 1 },
-    { q: "You must ________ the truth sooner or later.", a: ["face", "earn", "ban", "treat"], c: 0 },
-    { q: "The ________ saved the cat from the fire.", a: ["pilot", "firefighter", "officer", "secretary"], c: 1 },
-    { q: "Daily exercise is good for your ________.", a: ["fitness", "knowledge", "violence", "reason"], c: 0 },
-    { q: "Please ________ on your work.", a: ["face", "focus", "earn", "treat"], c: 1 },
-    { q: "We are fighting for ________ in the workplace.", a: ["gender equality", "domestic violence", "pressure", "safety"], c: 0 },
-    { q: "He is a very ________ and kind man.", a: ["gentle", "forced", "unable", "physical"], c: 0 },
-    { q: "They plan to ________ next summer.", a: ["get married", "deal with", "make a decision", "take care of"], c: 0 },
-    { q: "Being a doctor is a ________ career.", a: ["low-paying", "high-paying", "uneducated", "unable"], c: 1 },
-    { q: "Each ________ has their own talent.", a: ["individual", "equality", "knowledge", "safety"], c: 0 },
-    { q: "My son is 4 years old, so he goes to ________.", a: ["medical school", "kindergarten", "university", "summer camp"], c: 1 },
-    { q: "Reading helps increase your ________.", a: ["strength", "knowledge", "fitness", "violence"], c: 1 },
-    { q: "Working as a waiter is often a ________ job.", a: ["high-paying", "low-paying", "professional", "skillful"], c: 1 },
-    { q: "It's time to ________ about your future.", a: ["make a decision", "get married", "deal with", "take care of"], c: 0 },
-    { q: "He studied for 6 years in ________.", a: ["kindergarten", "medical school", "summer camp", "office"], c: 1 },
-    { q: "Exercise is good for both ________ and physical health.", a: ["mental", "gentle", "equal", "forced"], c: 0 },
-    { q: "The police ________ asked for his ID.", a: ["officer", "secretary", "pilot", "patient"], c: 0 },
-    { q: "The doctor said the ________ was successful.", a: ["operation", "opportunity", "equality", "strength"], c: 0 },
-    { q: "Studying abroad is a great ________.", a: ["pressure", "opportunity", "violence", "victim"], c: 1 }
+    { q: "Men and women should have ________ rights.", a: ["equal", "low-paying", "mental", "physical"], c: 0 },
+    { q: "We fight for ________ in society.", a: ["equality", "violence", "pressure", "ability"], c: 0 },
+    { q: "Using phone too much hurts your ________.", a: ["fitness", "eyesight", "strength", "knowledge"], c: 1 },
+    { q: "You must ________ the truth.", a: ["face", "earn", "ban", "treat"], c: 0 },
+    { q: "The ________ put out the fire.", a: ["pilot", "firefighter", "officer", "secretary"], c: 1 },
+    { q: "Exercise helps improve your ________.", a: ["fitness", "knowledge", "violence", "reason"], c: 0 },
+    { q: "Please ________ on your lesson.", a: ["face", "focus", "earn", "treat"], c: 1 },
+    { q: "Organizations promote ________.", a: ["gender equality", "violence", "pressure", "safety"], c: 0 },
+    { q: "He is very ________ with children.", a: ["gentle", "forced", "unable", "physical"], c: 0 },
+    { q: "They will ________ next month.", a: ["get married", "deal with", "earn", "ban"], c: 0 },
+    { q: "A surgeon is a ________ job.", a: ["high-paying", "low-paying", "uneducated", "unable"], c: 0 },
+    { q: "Each ________ has a different name.", a: ["individual", "equality", "knowledge", "safety"], c: 0 },
+    { q: "Children aged 4 go to ________.", a: ["medical school", "kindergarten", "university", "office"], c: 1 },
+    { q: "Reading gives you more ________.", a: ["strength", "knowledge", "fitness", "violence"], c: 1 },
+    { q: "Cleaning is often a ________ job.", a: ["high-paying", "low-paying", "professional", "skillful"], c: 1 },
+    { q: "It's time to ________ about your job.", a: ["make a decision", "get married", "deal with", "ban"], c: 0 },
+    { q: "He is studying to be a doctor at ________.", a: ["kindergarten", "medical school", "office", "camp"], c: 1 },
+    { q: "Yoga is good for ________ health.", a: ["mental", "gentle", "equal", "forced"], c: 0 },
+    { q: "The police ________ caught the thief.", a: ["officer", "secretary", "pilot", "patient"], c: 0 },
+    { q: "The ________ was done by a surgeon.", a: ["operation", "opportunity", "equality", "strength"], c: 0 },
+    { q: "Don't miss this ________ to study.", a: ["pressure", "opportunity", "violence", "victim"], c: 1 },
+    { q: "Doing sport is a ________ activity.", a: ["physical", "mental", "gentle", "forced"], c: 0 }
 ];
 
 let currentIdx = 0, score = 0, userName = "", userAnswers = [], timeLeft = 20, timer;
 
 function startQuiz() {
     userName = document.getElementById('student-name').value;
-    if (!userName) return alert("Nhập tên bạn nhé!");
+    if (!userName) return alert("Nhập tên nhé!");
+    if (audioCtx.state === 'suspended') audioCtx.resume(); // Kích hoạt âm thanh
     document.getElementById('start-screen').classList.add('hide');
     document.getElementById('quiz-container').classList.remove('hide');
     document.getElementById('display-name').innerText = "Học sinh: " + userName;
@@ -106,14 +126,22 @@ function loadQuestion() {
     timer = setInterval(() => {
         timeLeft--;
         document.getElementById('time-left').innerText = timeLeft;
-        if(timeLeft <= 0) { clearInterval(timer); checkAnswer(-1); }
+        if(timeLeft <= 0) { checkAnswer(-1); }
     }, 1000);
 }
 
 function checkAnswer(choice) {
+    clearInterval(timer);
     const data = quizData[currentIdx];
     const isCorrect = choice === data.c;
-    if(isCorrect) score++;
+    
+    if(isCorrect) {
+        score++;
+        playBeep(880, 'sine'); // Âm thanh cao cho câu đúng
+    } else {
+        playBeep(220, 'square'); // Âm thanh trầm cho câu sai
+    }
+    
     userAnswers.push({ q: data.q, user: choice === -1 ? "Hết giờ" : data.a[choice], correct: data.a[data.c], status: isCorrect });
     currentIdx++;
     if(currentIdx < quizData.length) loadQuestion();
@@ -121,7 +149,6 @@ function checkAnswer(choice) {
 }
 
 function showResults() {
-    clearInterval(timer);
     document.getElementById('quiz-container').classList.add('hide');
     document.getElementById('result-screen').classList.remove('hide');
     document.getElementById('ranking-box').innerText = score >= 25 ? "🥇" : (score >= 15 ? "🥈" : "🥉");
@@ -132,3 +159,5 @@ function showResults() {
     });
 }
 </script>
+</body>
+</html>
