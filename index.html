@@ -1,274 +1,210 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universe Vocabulary Quiz - Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: url('https://plus.unsplash.com/premium_photo-1721946441955-508af523ac60?q=80&w=1146&auto=format&fit=crop') no-repeat center/cover fixed;
-            margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
-        }
-        body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: -1; }
-        
-        .quiz-card {
-            background: #ffffff; border-radius: 25px; padding: 35px; width: 90%; max-width: 550px;
-            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .hide { display: none; }
-        h1, h2 { font-family: 'Orbitron', sans-serif; color: #1a1a2e; margin-bottom: 20px; }
-        
-        /* ĐẢM BẢO CHỮ HIỂN THỊ RÕ RÀNG */
-       /* CÂU HỎI */
-#question-text {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1a1a3c;
-    line-height: 1.7;
-    margin: 25px 0;
-    text-align: center;
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universe Quiz B1+ - Pastel Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background: url('https://images.unsplash.com/photo-1464802686167-b939a67e06a1?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover fixed;
+        margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+    }
+    body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+    
+    .quiz-card {
+        background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 35px; width: 95%; max-width: 600px;
+        text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: none;
+    }
+    .hide { display: none; }
+    
+    #question-text { 
+        color: #2d3436 !important; 
+        font-size: 1.4rem; font-weight: 800; margin-bottom: 25px; line-height: 1.6;
+        padding: 10px;
+    }
+    
+    /* PHƯƠNG ÁN MÀU GRADIENT PASTEL */
+    .option-btn {
+        width: 100%; 
+        text-align: center; 
+        padding: 18px; 
+        margin: 15px 0;
+        border-radius: 20px; 
+        border: none !important;
+        /* Gradient Pastel Hồng - Tím nhẹ */
+        background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%) !important; 
+        color: #2d3436 !important; /* Chữ tối màu để nổi bật trên nền pastel */
+        font-size: 1.2rem !important; 
+        font-weight: 700 !important;
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+        display: block;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
 
-/* KHUNG ĐÁP ÁN */
-#options {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
+    /* Đổi màu gradient khác cho từng nút nếu muốn đa dạng */
+    .option-btn:nth-child(2) { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%) !important; }
+    .option-btn:nth-child(3) { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%) !important; }
+    .option-btn:nth-child(4) { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%) !important; }
 
-/* MỖI PHƯƠNG ÁN – 1 HÀNG 1 Ô */
-.option-btn {
-    width: 100%;
-    padding: 18px 20px;
-    border-radius: 18px;
-    border: none;
-    cursor: pointer;
+    .option-btn:hover { 
+        transform: translateY(-3px); 
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        filter: brightness(1.05);
+    }
+    .option-btn:active { transform: translateY(0); }
 
-    background: linear-gradient(135deg, #fceabb, #f8b500);
-    background-size: 200% 200%;
+    #feedback-area { font-size: 3.5rem; height: 90px; margin-bottom: 10px; }
+    #timer-display { font-size: 1.5rem; font-weight: bold; color: #636e72; margin-bottom: 15px; }
+    
+    #level-tag { font-family: 'Orbitron'; font-size: 0.8rem; padding: 8px 25px; border-radius: 50px; margin-bottom: 20px; display: inline-block; color: white; text-transform: uppercase; letter-spacing: 1px; }
+    .easy { background: #81ecec; color: #2d3436 !important; }
+    .hard { background: #ff7675; }
 
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #2c2c54;
-    text-align: center;
-
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    transition: all 0.3s ease;
-}
-
-/* HIỆU ỨNG HOVER */
-.option-btn:hover:not([disabled]) {
-    transform: translateY(-3px) scale(1.02);
-    background-position: right center;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
-    color: #000;
-}
-
-/* KHÓA SAU KHI CHỌN */
-.option-btn[disabled] {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-        #feedback-area { font-size: 3rem; height: 70px; margin-bottom: 10px; font-weight: bold; }
-        #timer-display { font-size: 1.2rem; font-weight: bold; color: #b8860b; margin-bottom: 15px; }
-        
-        .progress-container { background: #e0e0e0; border-radius: 10px; height: 10px; margin: 20px 0; overflow: hidden; }
-        #progress-bar-fill { height: 100%; background: linear-gradient(90deg, #6A5ACD, #00d4ff); width: 0%; transition: 0.4s; }
-
-        input#name {
-            width: 80%; padding: 15px; border-radius: 15px; border: 2px solid #ddd;
-            font-size: 1.1rem; text-align: center; outline: none;
-        }
-        input#name:focus { border-color: #6A5ACD; }
-
-        .btn-main {
-            padding: 15px 40px; border-radius: 30px; background: #6A5ACD; color: white;
-            border: none; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;
-        }
-        .btn-main:hover { background: #483D8B; box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4); }
-    </style>
+    input#name { padding: 15px; width: 80%; border: 2px solid #a6c1ee; font-size: 1.1rem; border-radius: 15px; outline: none; text-align: center; }
+    .btn-start { padding: 15px 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border: none; border-radius: 50px; font-weight: 800; cursor: pointer; margin-top: 25px; box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3); }
+</style>
 </head>
 <body>
 
 <div id="start" class="quiz-card">
-    <h1>🚀 UNIVERSE VOCAB</h1>
-    <p style="color: #444;">Vui lòng nhập họ tên để làm bài bài thi</p>
-    <input id="name" type="text" placeholder="Họ và tên của bạn...">
-    <br><br>
-    <button class="btn-main" onclick="startQuiz()">BẮT ĐẦU THI</button>
+    <h1 style="font-family:'Orbitron'; color:#6c5ce7;">🌌 UNIVERSE QUIZ</h1>
+    <p style="font-weight: 600; color: #636e72;">Gradient Pastel Interface</p>
+    <input id="name" type="text" placeholder="HỌ TÊN CỦA BẠN...">
+    <br>
+    <button class="btn-start" onclick="startQuiz()">BẮT ĐẦU NGAY</button>
 </div>
 
 <div id="quiz" class="quiz-card hide">
+    <div id="level-tag"></div>
     <div id="feedback-area"></div>
-    <div id="display-name" style="color:#6A5ACD; font-weight:bold;"></div>
-    <div class="progress-container"><div id="progress-bar-fill"></div></div>
-    <div id="timer-display">⏱️ Còn lại: <span id="time">20</span>s</div>
+    <div id="timer-display">⏱️ <span id="time">20</span>s</div>
     <div id="question-text"></div>
     <div id="options"></div>
 </div>
 
 <div id="result" class="quiz-card hide">
-    <h2>🌟 KẾT QUẢ CUỐI CÙNG 🌟</h2>
-    <div id="ranking-box" style="font-size: 2.2rem; margin: 20px 0; font-family: 'Orbitron';"></div>
-    <div id="final-stats" style="font-size: 1.3rem; line-height: 1.8; color: #1a1a2e; background: #f0f4ff; padding: 20px; border-radius: 15px;"></div>
-    <br>
-    <p style="color: #666; font-style: italic; font-size: 0.9rem;">(Lưu ý: Hệ thống không hiển thị đáp án để bảo mật đề thi)</p>
-    <button class="btn-main" onclick="location.reload()">LÀM LẠI</button>
+    <h1 style="font-family:'Orbitron'; color: #6c5ce7;">FINISH!</h1>
+    <div id="ranking-box" style="font-size: 2.5rem; margin: 20px 0;"></div>
+    <div id="final-stats" style="font-size: 1.4rem; font-weight: 800; color: #2d3436; line-height: 2;"></div>
+    <button class="btn-start" onclick="location.reload()">LÀM LẠI</button>
 </div>
 
 <script>
-/* ÂM THANH */
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playBeep(type) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    
-    if(type === 'correct') {
-        osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    } else {
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    }
-    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+function playBeep(isOk) {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    o.frequency.value = isOk ? 1100 : 150;
+    g.gain.value = 0.1; o.start(); o.stop(audioCtx.currentTime + 0.2);
 }
 
-/* DỮ LIỆU 30 CÂU HỎI */
-const quizData = [
-
-/* =====================
-   🟢 15 CÂU DỄ (B1)
-===================== */
-
-{q:"She has the ________ to speak English fluently.", a:["ability","pressure","victim","violence"], c:0},
-{q:"He was ________ to attend the meeting because he was sick.", a:["able","unable","gentle","equal"], c:1},
-{q:"The government decided to ________ smoking in public places.", a:["focus","ban","earn","treat"], c:1},
-{q:"Men and women should have ________ rights.", a:["mental","equal","physical","forced"], c:1},
-{q:"Regular exercise improves your physical ________.", a:["knowledge","fitness","pressure","violence"], c:1},
-{q:"She works hard to ________ enough money for her family.", a:["earn","face","ban","focus"], c:0},
-{q:"Children aged 4 usually go to ________.", a:["university","office","kindergarten","camp"], c:2},
-{q:"Reading books helps you gain more ________.", a:["strength","knowledge","fitness","safety"], c:1},
-{q:"The firefighter helped to put out the ________.", a:["fire","pressure","opportunity","victim"], c:0},
-{q:"Yoga is good for your ________ health.", a:["forced","mental","equal","violent"], c:1},
-{q:"They decided to ________ next year.", a:["ban","get married","deal with","focus"], c:1},
-{q:"A surgeon is a very ________ job.", a:["low-paying","high-paying","gentle","unable"], c:1},
-{q:"Please ________ on what the teacher is saying.", a:["earn","focus","ban","treat"], c:1},
-{q:"Everyone should be treated as an ________.", a:["individual","equality","ability","operation"], c:0},
-{q:"Using phones too much can harm your ________.", a:["eyesight","fitness","knowledge","safety"], c:0},
-
-/* =====================
-   🔵 15 CÂU KHÓ (B1+)
-===================== */
-
-{q:"She had to ________ a difficult decision about her career.", a:["make","earn","ban","focus"], c:0},
-{q:"Domestic violence is a serious social ________.", a:["ability","issue","operation","fitness"], c:1},
-{q:"He managed to ________ the problem despite the pressure.", a:["deal with","get married","ban","face with"], c:0},
-{q:"This job requires both physical and mental ________.", a:["violence","strength","equality","opportunity"], c:1},
-{q:"Education gives young people more ________ in life.", a:["pressure","opportunities","violence","victims"], c:1},
-{q:"Gender ________ is still a challenge in many countries.", a:["equal","equality","ability","fitness"], c:1},
-{q:"He spoke in a calm and ________ manner.", a:["forced","violent","gentle","unable"], c:2},
-{q:"The police officer successfully ________ the suspect.", a:["earned","treated","caught","focused"], c:2},
-{q:"She refused the offer because of the low ________.", a:["salary","fitness","knowledge","safety"], c:0},
-{q:"A good leader knows how to ________ responsibility.", a:["earn","face","ban","force"], c:1},
-{q:"He studies medicine at a well-known ________.", a:["kindergarten","medical school","camp","office"], c:1},
-{q:"This course helps students develop critical ________.", a:["fitness","thinking","violence","strength"], c:1},
-{q:"The operation was performed by an experienced ________.", a:["officer","surgeon","pilot","secretary"], c:1},
-{q:"She didn’t want to miss the chance, so she took the ________.", a:["pressure","opportunity","violence","victim"], c:1},
-{q:"Doing sports regularly is a healthy ________.", a:["decision","activity","operation","ability"], c:1}
-
+const easyQ = [
+    {q:"She has the ________ to speak English fluently.",a:["ability","pressure","victim","violence"],c:0},
+    {q:"The government decided to ________ smoking in public places.",a:["earn","face","ban","focus"],c:2},
+    {q:"The ________ quickly arrived to put out the fire.",a:["pilot","firefighter","officer","secretary"],c:1},
+    {q:"You need to ________ on your studies if you want to pass.",a:["face","focus","earn","treat"],c:1},
+    {q:"They are planning to ________ next summer.",a:["get married","deal with","earn","ban"],c:0},
+    {q:"Children go to ________ before starting primary school.",a:["medical school","kindergarten","university","office"],c:1},
+    {q:"Reading books is a great way to gain ________.",a:["strength","knowledge","fitness","violence"],c:1},
+    {q:"Daily meditation is good for your ________ health.",a:["mental","gentle","equal","forced"],c:0},
+    {q:"Regular exercise is essential for physical ________.",a:["fitness","knowledge","violence","reason"],c:0},
+    {q:"The nurse was very ________ when treating the patient.",a:["gentle","forced","unable","physical"],c:0},
+    {q:"Men and women should receive ________ pay for the same work.",a:["equal","low-paying","mental","physical"],c:0},
+    {q:"It's time to ________ the truth about what happened.",a:["face","earn","ban","treat"],c:0},
+    {q:"Every ________ has the right to express their opinion.",a:["individual","equality","knowledge","safety"],c:0},
+    {q:"He is studying to become a doctor at ________.",a:["kindergarten","medical school","office","camp"],c:1},
+    {q:"Walking to work is a simple ________ activity.",a:["physical","mental","gentle","forced"],c:0}
 ];
 
-let currentIndex = 0, score = 0, timer, timeLeft = 20, userName = "";
+const hardQ = [
+    {q:"Many women are still ________ to balance work and family life.",a:["unable","able","forced","official"],c:0},
+    {q:"The organization works to protect women from ________.",a:["equality","domestic violence","discrimination","opportunity"],c:1},
+    {q:"The new manager has to ________ many difficult employees.",a:["ban","deal with","face up to","promote"],c:1},
+    {q:"Becoming a ________ requires years of intense training and courage.",a:["secretary","cosmonaut","pilot","officer"],c:1},
+    {q:"In some cultures, girls are ________ into early marriages.",a:["gentle","forced","unable","equal"],c:1},
+    {q:"We are fighting for ________ in the technology industry.",a:["gender equality","violence","pressure","fitness"],c:0},
+    {q:"The two companies formed a ________ to develop new products.",a:["equality","operation","partnership","knowledge"],c:2},
+    {q:"He left his job to ________ his dream of traveling the world.",a:["pursue","earn","ban","treat"],c:0},
+    {q:"The economy suffers when there are too many ________ jobs.",a:["high-paying","low-paying","professional","skillful"],c:1},
+    {q:"You must ________ regarding which university to attend.",a:["make a decision","get married","face","deal with"],c:0},
+    {q:"The surgical ________ lasted for over six hours.",a:["operation","opportunity","fitness","strength"],c:0},
+    {q:"High school students often face intense ________ to perform well.",a:["equality","violence","pressure","safety"],c:2},
+    {q:"Scholarships provide an ________ for talented students.",a:["pressure","opportunity","violence","victim"],c:1},
+    {q:"________ is a serious issue that affects many households.",a:["fitness","violence","knowledge","reason"],c:1},
+    {q:"It takes years of hard work to ________ a professional degree.",a:["pursue","earn","promote","treat"],c:1}
+];
+
+let allQ = [], i = 0, score = 0, timer, time = 20, userName = "";
 
 function startQuiz() {
     userName = document.getElementById("name").value.trim();
     if(!userName) return alert("Vui lòng nhập tên!");
-    
-    // Xáo trộn đề
-    quizData.sort(() => Math.random() - 0.5);
-    
+    easyQ.sort(()=>Math.random()-0.5);
+    hardQ.sort(()=>Math.random()-0.5);
+    allQ = [...easyQ, ...hardQ];
     document.getElementById("start").classList.add("hide");
     document.getElementById("quiz").classList.remove("hide");
-    document.getElementById("display-name").innerText = "Học sinh: " + userName;
-    loadQuestion();
+    loadQ();
 }
 
-function loadQuestion() {
-    if(currentIndex >= quizData.length) return showResult();
-    
-    clearInterval(timer);
-    timeLeft = 20;
-    document.getElementById("time").innerText = timeLeft;
+function loadQ() {
+    if(i >= allQ.length) return showResult();
+    clearInterval(timer); time = 20;
+    document.getElementById("time").innerText = time;
     document.getElementById("feedback-area").innerText = "";
     
-    const q = quizData[currentIndex];
-    document.getElementById("question-text").innerText = `Câu ${currentIndex + 1}: ${q.q}`;
+    const isEasy = i < 15;
+    const tag = document.getElementById("level-tag");
+    tag.innerText = isEasy ? "Easy Level" : "B1+ Challenge";
+    tag.className = isEasy ? "easy" : "hard";
+
+    document.getElementById("question-text").innerText = allQ[i].q;
+    const box = document.getElementById("options");
+    box.innerHTML = "";
     
-    const optionsBox = document.getElementById("options");
-    optionsBox.innerHTML = "";
-    
-    q.a.forEach((opt, idx) => {
+    allQ[i].a.forEach((opt, idx) => {
         const btn = document.createElement("button");
         btn.className = "option-btn";
         btn.innerText = opt;
-        btn.onclick = () => checkAnswer(idx);
-        optionsBox.appendChild(btn);
+        btn.onclick = () => check(idx);
+        box.appendChild(btn);
     });
-    
-    document.getElementById("progress-bar-fill").style.width = ((currentIndex / quizData.length) * 100) + "%";
-    
+
     timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById("time").innerText = timeLeft;
-        if(timeLeft <= 0) checkAnswer(-1);
+        time--; document.getElementById("time").innerText = time;
+        if(time <= 0) check(-1);
     }, 1000);
 }
 
-function checkAnswer(selectedIdx) {
+function check(idx) {
     clearInterval(timer);
-    const correctIdx = quizData[currentIndex].c;
+    const isOk = (idx === allQ[i].c);
     const feedback = document.getElementById("feedback-area");
-    const buttons = document.querySelectorAll(".option-btn");
-    
-    buttons.forEach(b => b.disabled = true); // Khóa nút
+    document.querySelectorAll(".option-btn").forEach(b => b.style.pointerEvents = "none");
 
-    if(selectedIdx === correctIdx) {
-        score++;
-        playBeep('correct');
-        feedback.innerText = "✨ Giỏi quá! ✨";
-        feedback.style.color = "#2ecc71";
+    if(isOk) {
+        score++; playBeep(true);
+        feedback.innerText = "🌟";
     } else {
-        playBeep('wrong');
-        feedback.innerText = "🤡 Ngu ngốc! 🤡";
-        feedback.style.color = "#e74c3c";
+        playBeep(false);
+        feedback.innerText = "🤡";
     }
-
-    currentIndex++;
-    setTimeout(loadQuestion, 1200);
+    i++;
+    setTimeout(loadQ, 1000);
 }
 
 function showResult() {
     document.getElementById("quiz").classList.add("hide");
     document.getElementById("result").classList.remove("hide");
-    
-    const rankBox = document.getElementById("ranking-box");
-    if(score >= 25) rankBox.innerText = "💎 THẦN ĐỒNG";
-    else if(score >= 15) rankBox.innerText = "🚀 PHI HÀNH GIA";
-    else rankBox.innerText = "🌑 HỐ ĐEN";
-
+    const rank = score >= 27 ? "💎 EXPERT" : (score >= 18 ? "🚀 ACHIEVER" : "🪐 LEARNER");
+    document.getElementById("ranking-box").innerText = rank;
     document.getElementById("final-stats").innerHTML = `
-        Tên: <b>${userName}</b> <br>
-        Số câu đúng: <b style="color:green">${score}</b> / ${quizData.length} <br>
-        Tỷ lệ: <b>${Math.round((score/quizData.length)*100)}%</b>
+        Student: ${userName}<br>
+        Correct: ${score}/30<br>
+        Grade: ${((score/30)*10).toFixed(1)}
     `;
 }
 </script>
