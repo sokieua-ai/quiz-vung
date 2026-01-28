@@ -24,21 +24,56 @@
         h1, h2 { font-family: 'Orbitron', sans-serif; color: #1a1a2e; margin-bottom: 20px; }
         
         /* ĐẢM BẢO CHỮ HIỂN THỊ RÕ RÀNG */
-       #question-text {
-    color: #0b0b2c;
-    font-size: 1.45rem;
+       /* CÂU HỎI */
+#question-text {
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 22px;
-    line-height: 1.6;
+    color: #1a1a3c;
+    line-height: 1.7;
+    margin: 25px 0;
+    text-align: center;
 }
 
+/* KHUNG ĐÁP ÁN */
+#options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* MỖI PHƯƠNG ÁN – 1 HÀNG 1 Ô */
 .option-btn {
+    width: 100%;
+    padding: 18px 20px;
+    border-radius: 18px;
+    border: none;
+    cursor: pointer;
+
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    background-size: 200% 200%;
+
     font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: 0.3px;
+    color: #2c2c54;
+    text-align: center;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
 }
-        .option-btn:hover:not([disabled]) { background: #6A5ACD; color: #ffffff !important; transform: scale(1.02); }
-        .option-btn[disabled] { cursor: not-allowed; opacity: 0.8; }
+
+/* HIỆU ỨNG HOVER */
+.option-btn:hover:not([disabled]) {
+    transform: translateY(-3px) scale(1.02);
+    background-position: right center;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    color: #000;
+}
+
+/* KHÓA SAU KHI CHỌN */
+.option-btn[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 
         #feedback-area { font-size: 3rem; height: 70px; margin-bottom: 10px; font-weight: bold; }
         #timer-display { font-size: 1.2rem; font-weight: bold; color: #b8860b; margin-bottom: 15px; }
