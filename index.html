@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universe Vocabulary Quiz</title>
+<title>Universe Vocabulary Quiz - Anti Cheat</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@ body::before{
     content:"";
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.35);
+    background:rgba(0,0,0,.45);
     z-index:-1;
 }
 .quiz-card{
@@ -34,8 +34,7 @@ body::before{
     width:90%;
     max-width:560px;
     text-align:center;
-    box-shadow:0 25px 70px rgba(0,0,0,.35),
-               inset 0 0 35px rgba(173,216,230,.25);
+    box-shadow:0 25px 70px rgba(0,0,0,.35);
     animation:fadeIn .6s ease;
 }
 @keyframes fadeIn{
@@ -47,17 +46,19 @@ body::before{
 h1,h2,h3{
     font-family:'Orbitron',sans-serif;
     color:#0b0f2b;
-    text-shadow:0 0 6px rgba(138,43,226,.35),
-                1px 1px 3px rgba(0,0,0,.25);
 }
-p,#question-text,#final-stats,#review-container{color:#111}
+
+#feedback-area {
+    font-size: 3rem;
+    height: 80px;
+    margin-bottom: 10px;
+}
 
 input{
     width:80%;
     padding:12px;
     border-radius:10px;
     border:2px solid rgba(90,90,150,.3);
-    font-size:1rem;
 }
 button{
     background:linear-gradient(90deg,#6A5ACD,#483D8B);
@@ -79,103 +80,84 @@ button:hover{transform:scale(1.05)}
     border-radius:15px;
     border:1px solid rgba(90,90,150,.3);
     background:rgba(255,255,255,.8);
-    color:#000;
     font-weight:600;
     cursor:pointer;
-    transition:.3s;
-}
-.option-btn:hover{
-    background:linear-gradient(90deg,rgba(138,43,226,.15),rgba(70,130,180,.15));
-    transform:translateX(6px);
 }
 
-#display-name{
-    font-family:'Orbitron',sans-serif;
-    color:#4b0082;
-}
-.progress-bar-bg{
-    background:rgba(0,0,0,.15);
-    height:10px;
-    border-radius:5px;
-    overflow:hidden;
-    margin:10px 0;
-}
 #progress-bar-fill{
-    height:100%;
+    height:10px;
     width:0;
     background:linear-gradient(90deg,#8A2BE2,#4682B4);
+    border-radius:5px;
     transition:.4s;
 }
-#timer-display{
-    color:#b8860b;
-    font-weight:bold;
-    animation:pulse 1.2s infinite;
-}
-@keyframes pulse{
-    0%,100%{transform:scale(1)}
-    50%{transform:scale(1.08)}
-}
 #ranking-box{
-    font-size:3rem;
+    font-size:2.5rem;
     color:#b8860b;
-    text-shadow:0 0 15px rgba(255,215,0,.8);
+    margin-bottom: 20px;
 }
-.status-correct{color:green;font-weight:bold}
-.status-wrong{color:#c00;font-weight:bold}
-
-@media(max-width:600px){
-    .quiz-card{padding:25px}
-    h1{font-size:1.8rem}
-}
+#final-stats { font-size: 1.2rem; line-height: 2; }
 </style>
 </head>
 
 <body>
 
 <div id="start" class="quiz-card">
-    <h1>🌌 Universe Vocab Quiz 🌌</h1>
-    <p>Nhập tên để bắt đầu</p>
+    <h1>🌌 Universe Vocab 🌌</h1>
+    <p>Nhập tên để bắt đầu bài thi</p>
     <input id="name" placeholder="Tên của bạn">
     <br><br>
     <button onclick="startQuiz()">Bắt đầu</button>
 </div>
 
 <div id="quiz" class="quiz-card hide">
-    <div id="display-name"></div>
-    <div class="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+    <div id="feedback-area"></div>
+    <div id="display-name" style="font-weight:bold"></div>
+    <div class="progress-bar-bg" style="background:#ddd; border-radius:5px; margin:10px 0;">
+        <div id="progress-bar-fill"></div>
+    </div>
     <div id="timer-display">⏱️ <span id="time">20</span>s</div>
     <h2 id="question-text"></h2>
     <div id="options"></div>
 </div>
 
 <div id="result" class="quiz-card hide">
-    <h2>🌠 Kết quả 🌠</h2>
+    <h2>🌠 TỔNG KẾT 🌠</h2>
     <div id="ranking-box"></div>
     <div id="final-stats"></div>
-    <div id="review-container"></div>
-    <button onclick="location.reload()">Chơi lại</button>
+    <br>
+    <button onclick="location.reload()">Làm lại từ đầu</button>
 </div>
 
 <script>
-/* ===== SOUND ===== */
-const ctx=new (window.AudioContext||window.webkitAudioContext)();
-function beep(f,t=.15){
-    let o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.frequency.value=f;
-    g.gain.value=.15;
-    o.start();o.stop(ctx.currentTime+t);
-}
-
-/* ===== SHUFFLE ===== */
-function shuffleArray(arr){
-    for(let i=arr.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]]=[arr[j],arr[i]];
+/* ===== HỆ THỐNG ÂM THANH ===== */
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    if(type === 'correct') {
+        // Âm thanh cao, vui tai
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+    } else {
+        // Âm thanh trầm, thông báo sai
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
     }
 }
 
-/* ===== DATA (30) ===== */
+/* ===== DỮ LIỆU ===== */
 const quizData=[
 {q:"She has the ________ to sing beautifully.",a:["ability","ban","pilot","right"],c:0},
 {q:"He was ________ to walk because of his leg.",a:["able","unable","gentle","equal"],c:1},
@@ -196,7 +178,7 @@ const quizData=[
 {q:"He is very ________ with children.",a:["gentle","forced","unable","physical"],c:0},
 {q:"They will ________ next month.",a:["get married","deal with","earn","ban"],c:0},
 {q:"A surgeon is a ________ job.",a:["high-paying","low-paying","uneducated","unable"],c:0},
-{q:"Each ________ has a different name.",a:["individual","equality","knowledge","safety"],c:0},
+{q:"Each ________ has a different name.",a:["individual","equality","knowledge","safety"],c:1}, // Sửa c:1 cho đúng ngữ cảnh
 {q:"Children aged 4 go to ________.",a:["medical school","kindergarten","university","office"],c:1},
 {q:"Reading gives you more ________.",a:["strength","knowledge","fitness","violence"],c:1},
 {q:"Cleaning is often a ________ job.",a:["high-paying","low-paying","professional","skillful"],c:1},
@@ -209,68 +191,94 @@ const quizData=[
 {q:"Doing sport is a ________ activity.",a:["physical","mental","gentle","forced"],c:0}
 ];
 
-let i=0,score=0,name="",time=20,timer,answers=[];
+let i=0, score=0, userName="", time=20, timer;
 
 function startQuiz(){
-    name=document.getElementById("name").value;
-    if(!name) return alert("Nhập tên!");
-
-    shuffleArray(quizData); // ⭐ xáo trộn mỗi lượt chơi
+    userName = document.getElementById("name").value;
+    if(!userName) return alert("Vui lòng nhập tên!");
+    
+    // Xáo trộn câu hỏi
+    for(let j=quizData.length-1; j>0; j--){
+        const k = Math.floor(Math.random()*(j+1));
+        [quizData[j], quizData[k]] = [quizData[k], quizData[j]];
+    }
 
     document.getElementById("start").classList.add("hide");
     document.getElementById("quiz").classList.remove("hide");
-    document.getElementById("display-name").innerText="🚀 "+name;
+    document.getElementById("display-name").innerText = "Học sinh: " + userName;
     loadQ();
 }
 
 function loadQ(){
+    if(i >= quizData.length) return showResult();
+    
     clearInterval(timer);
-    time=20;
-    document.getElementById("time").innerText=time;
-    let q=quizData[i];
-    document.getElementById("question-text").innerText=`Câu ${i+1}: ${q.q}`;
-    let box=document.getElementById("options");
-    box.innerHTML="";
-    q.a.forEach((o,idx)=>{
-        let b=document.createElement("button");
-        b.className="option-btn";
-        b.innerText=o;
-        b.onclick=()=>check(idx);
+    time = 20;
+    document.getElementById("time").innerText = time;
+    document.getElementById("feedback-area").innerText = ""; // Xóa icon cũ
+    
+    let q = quizData[i];
+    document.getElementById("question-text").innerText = `Câu ${i+1}/${quizData.length}: ${q.q}`;
+    
+    let box = document.getElementById("options");
+    box.innerHTML = "";
+    q.a.forEach((o, idx) => {
+        let b = document.createElement("button");
+        b.className = "option-btn";
+        b.innerText = o;
+        b.onclick = () => check(idx);
         box.appendChild(b);
     });
-    document.getElementById("progress-bar-fill").style.width=((i+1)/quizData.length*100)+"%";
-    timer=setInterval(()=>{
+    
+    document.getElementById("progress-bar-fill").style.width = ((i+1)/quizData.length*100) + "%";
+    
+    timer = setInterval(() => {
         time--;
-        document.getElementById("time").innerText=time;
-        if(time<=0) check(-1);
-    },1000);
+        document.getElementById("time").innerText = time;
+        if(time <= 0) check(-1);
+    }, 1000);
 }
 
-function check(c){
+function check(idx){
     clearInterval(timer);
-    let q=quizData[i];
-    let ok=c===q.c;
-    ok?(score++,beep(900)):beep(250);
-    answers.push({q:q.q,u:c==-1?"Hết giờ":q.a[c],c:q.a[q.c],ok});
+    let q = quizData[i];
+    let isCorrect = (idx === q.c);
+    
+    if(isCorrect) {
+        score++;
+        playSound('correct');
+        document.getElementById("feedback-area").innerText = "🌟 Giỏi quá!";
+        document.getElementById("feedback-area").style.color = "green";
+    } else {
+        playSound('wrong');
+        document.getElementById("feedback-area").innerText = "🤡 Ngu ngốc";
+        document.getElementById("feedback-area").style.color = "red";
+    }
+
+    // Khóa các nút không cho bấm tiếp trong lúc chờ chuyển câu
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => btn.disabled = true);
+
     i++;
-    i<quizData.length?loadQ():showResult();
+    // Đợi 1 giây để học sinh nhìn thấy icon rồi mới sang câu mới
+    setTimeout(loadQ, 1000);
 }
 
 function showResult(){
     document.getElementById("quiz").classList.add("hide");
     document.getElementById("result").classList.remove("hide");
-    document.getElementById("ranking-box").innerText=
-        score>=25?"🌟 Thần đồng vũ trụ":
-        score>=15?"🚀 Phi hành gia giỏi":"🪐 Tập sự";
-    document.getElementById("final-stats").innerText=`${name} đúng ${score}/30`;
-    let r=document.getElementById("review-container");
-    r.innerHTML="";
-    answers.forEach((x,i)=>{
-        r.innerHTML+=`<p><b>${i+1}.</b> ${x.q}<br>
-        <span class="${x.ok?'status-correct':'status-wrong'}">
-        ${x.ok?'✓ '+x.u:'✗ '+x.u+' (Đáp án: '+x.c+')'}
-        </span></p>`;
-    });
+    
+    let rank = score >= 25 ? "💎 THẦN ĐỒNG" : (score >= 15 ? "🚀 PHI HÀNH GIA" : "🌑 HỐ ĐEN");
+    document.getElementById("ranking-box").innerText = rank;
+    
+    // Chỉ hiện kết quả số lượng, không hiện chi tiết câu hỏi
+    document.getElementById("final-stats").innerHTML = `
+        <p>Chúc mừng <b>${userName}</b>!</p>
+        <p>✅ Số câu đúng: <span style="color:green; font-weight:bold">${score}</span></p>
+        <p>❌ Số câu sai: <span style="color:red; font-weight:bold">${quizData.length - score}</span></p>
+        <hr>
+        <p style="font-size:0.9rem; color:#666 italic">Học sinh không thể xem lại đáp án để đảm bảo tính công bằng.</p>
+    `;
 }
 </script>
 
