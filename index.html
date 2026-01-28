@@ -24,15 +24,19 @@
         h1, h2 { font-family: 'Orbitron', sans-serif; color: #1a1a2e; margin-bottom: 20px; }
         
         /* ĐẢM BẢO CHỮ HIỂN THỊ RÕ RÀNG */
-        #question-text { color: #000000; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
-        
-        .option-btn {
-            width: 100%; text-align: left; padding: 16px; margin: 12px 0;
-            border-radius: 15px; border: 2px solid #6A5ACD;
-            background: #fdfdfd; 
-            color: #000000 !important; /* Chữ đen đậm */
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
+       #question-text {
+    color: #0b0b2c;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.option-btn {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
         .option-btn:hover:not([disabled]) { background: #6A5ACD; color: #ffffff !important; transform: scale(1.02); }
         .option-btn[disabled] { cursor: not-allowed; opacity: 0.8; }
 
@@ -105,36 +109,47 @@ function playBeep(type) {
 
 /* DỮ LIỆU 30 CÂU HỎI */
 const quizData = [
-    {q:"She has the ________ to sing beautifully.",a:["ability","ban","pilot","right"],c:0},
-    {q:"He was ________ to walk because of his leg.",a:["able","unable","gentle","equal"],c:1},
-    {q:"The government decided to ________ smoking.",a:["earn","face","ban","focus"],c:2},
-    {q:"In the past, many girls were ________ to get married.",a:["forced","gentle","official","equal"],c:0},
-    {q:"He is a famous ________ who traveled to space.",a:["firefighter","cosmonaut","surgeon","secretary"],c:1},
-    {q:"We need to ________ this problem now.",a:["deal with","earn","focus","ban"],c:0},
-    {q:"________ is a serious crime in families.",a:["Fitness","Domestic violence","Teamwork","Knowledge"],c:1},
-    {q:"She works hard to ________ a high salary.",a:["face","earn","promote","treat"],c:1},
-    {q:"Men and women should have ________ rights.",a:["equal","low-paying","mental","physical"],c:0},
-    {q:"We fight for ________ in society.",a:["equality","violence","pressure","ability"],c:0},
-    {q:"Using phone too much hurts your ________.",a:["fitness","eyesight","strength","knowledge"],c:1},
-    {q:"You must ________ the truth.",a:["face","earn","ban","treat"],c:0},
-    {q:"The ________ put out the fire.",a:["pilot","firefighter","officer","secretary"],c:1},
-    {q:"Exercise helps improve your ________.",a:["fitness","knowledge","violence","reason"],c:0},
-    {q:"Please ________ on your lesson.",a:["face","focus","earn","treat"],c:1},
-    {q:"Organizations promote ________.",a:["gender equality","violence","pressure","safety"],c:0},
-    {q:"He is very ________ with children.",a:["gentle","forced","unable","physical"],c:0},
-    {q:"They will ________ next month.",a:["get married","deal with","earn","ban"],c:0},
-    {q:"A surgeon is a ________ job.",a:["high-paying","low-paying","uneducated","unable"],c:0},
-    {q:"Each ________ has a different name.",a:["individual","equality","knowledge","safety"],c:0},
-    {q:"Children aged 4 go to ________.",a:["medical school","kindergarten","university","office"],c:1},
-    {q:"Reading gives you more ________.",a:["strength","knowledge","fitness","violence"],c:1},
-    {q:"Cleaning is often a ________ job.",a:["high-paying","low-paying","professional","skillful"],c:1},
-    {q:"It's time to ________ about your job.",a:["make a decision","get married","deal with","ban"],c:0},
-    {q:"He studies medicine at ________.",a:["kindergarten","medical school","office","camp"],c:1},
-    {q:"Yoga is good for ________ health.",a:["mental","gentle","equal","forced"],c:0},
-    {q:"The police ________ caught the thief.",a:["officer","secretary","pilot","patient"],c:0},
-    {q:"The ________ was done by a surgeon.",a:["operation","opportunity","equality","strength"],c:0},
-    {q:"Don't miss this ________ to study.",a:["pressure","opportunity","violence","victim"],c:1},
-    {q:"Doing sport is a ________ activity.",a:["physical","mental","gentle","forced"],c:0}
+
+/* =====================
+   🟢 15 CÂU DỄ (B1)
+===================== */
+
+{q:"She has the ________ to speak English fluently.", a:["ability","pressure","victim","violence"], c:0},
+{q:"He was ________ to attend the meeting because he was sick.", a:["able","unable","gentle","equal"], c:1},
+{q:"The government decided to ________ smoking in public places.", a:["focus","ban","earn","treat"], c:1},
+{q:"Men and women should have ________ rights.", a:["mental","equal","physical","forced"], c:1},
+{q:"Regular exercise improves your physical ________.", a:["knowledge","fitness","pressure","violence"], c:1},
+{q:"She works hard to ________ enough money for her family.", a:["earn","face","ban","focus"], c:0},
+{q:"Children aged 4 usually go to ________.", a:["university","office","kindergarten","camp"], c:2},
+{q:"Reading books helps you gain more ________.", a:["strength","knowledge","fitness","safety"], c:1},
+{q:"The firefighter helped to put out the ________.", a:["fire","pressure","opportunity","victim"], c:0},
+{q:"Yoga is good for your ________ health.", a:["forced","mental","equal","violent"], c:1},
+{q:"They decided to ________ next year.", a:["ban","get married","deal with","focus"], c:1},
+{q:"A surgeon is a very ________ job.", a:["low-paying","high-paying","gentle","unable"], c:1},
+{q:"Please ________ on what the teacher is saying.", a:["earn","focus","ban","treat"], c:1},
+{q:"Everyone should be treated as an ________.", a:["individual","equality","ability","operation"], c:0},
+{q:"Using phones too much can harm your ________.", a:["eyesight","fitness","knowledge","safety"], c:0},
+
+/* =====================
+   🔵 15 CÂU KHÓ (B1+)
+===================== */
+
+{q:"She had to ________ a difficult decision about her career.", a:["make","earn","ban","focus"], c:0},
+{q:"Domestic violence is a serious social ________.", a:["ability","issue","operation","fitness"], c:1},
+{q:"He managed to ________ the problem despite the pressure.", a:["deal with","get married","ban","face with"], c:0},
+{q:"This job requires both physical and mental ________.", a:["violence","strength","equality","opportunity"], c:1},
+{q:"Education gives young people more ________ in life.", a:["pressure","opportunities","violence","victims"], c:1},
+{q:"Gender ________ is still a challenge in many countries.", a:["equal","equality","ability","fitness"], c:1},
+{q:"He spoke in a calm and ________ manner.", a:["forced","violent","gentle","unable"], c:2},
+{q:"The police officer successfully ________ the suspect.", a:["earned","treated","caught","focused"], c:2},
+{q:"She refused the offer because of the low ________.", a:["salary","fitness","knowledge","safety"], c:0},
+{q:"A good leader knows how to ________ responsibility.", a:["earn","face","ban","force"], c:1},
+{q:"He studies medicine at a well-known ________.", a:["kindergarten","medical school","camp","office"], c:1},
+{q:"This course helps students develop critical ________.", a:["fitness","thinking","violence","strength"], c:1},
+{q:"The operation was performed by an experienced ________.", a:["officer","surgeon","pilot","secretary"], c:1},
+{q:"She didn’t want to miss the chance, so she took the ________.", a:["pressure","opportunity","violence","victim"], c:1},
+{q:"Doing sports regularly is a healthy ________.", a:["decision","activity","operation","ability"], c:1}
+
 ];
 
 let currentIndex = 0, score = 0, timer, timeLeft = 20, userName = "";
